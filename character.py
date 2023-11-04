@@ -1,5 +1,5 @@
 from typing import Dict, List
-from tier_parser import Tier
+from tier import Tier
 
 
 class FictionalCharacterVersion:
@@ -40,17 +40,3 @@ class FictionalCharacter:
     def __str__(self):
         versions_str = "\n".join([str(version) for version in self.character_versions])
         return f"Character: {self.character_name}\n{versions_str}"
-
-
-if __name__ == "__main__":
-    # Usage example:
-    example_name = "Character A"
-
-    version_1_stats = {"Intelligence": Tier("Intelligence", ["Average"]), "Speed": Tier("Speed", ["Athletic"])}
-    version_2_stats = {"Intelligence": Tier("Intelligence", ["Above Average"]), "Speed": Tier("Speed", ["Peak Human"])}
-    example_version_1 = FictionalCharacterVersion("Anime Version", version_1_stats)
-    example_version_2 = FictionalCharacterVersion("Manga Version", version_2_stats)
-
-    example_character = FictionalCharacter(example_name, [example_version_1, example_version_2])
-
-    print(example_character)

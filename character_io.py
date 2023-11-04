@@ -2,7 +2,7 @@ import csv
 import os
 
 from character import FictionalCharacter, FictionalCharacterVersion
-from tier_parser import Tier
+from tier import Tier, TierClassifier
 
 
 def write_to_csv(character: FictionalCharacter, output_file_path: str = None):
@@ -36,7 +36,7 @@ def write_to_csv(character: FictionalCharacter, output_file_path: str = None):
         writer.writerows(data)
 
 
-def read_from_csv(character_name: str, input_file_path: str = None):
+def read_from_csv(character_name: str, tier_classifier: TierClassifier, input_file_path: str = None):
     default_file_name = character_name.strip().replace(" ", "-")
     if input_file_path is None:
         input_file_path = f"out/{default_file_name}.csv"
@@ -51,7 +51,7 @@ def read_from_csv(character_name: str, input_file_path: str = None):
             version_stats = {}
             for i in range(1, len(row)):
                 stat_name = legend[i]
-                tier_value = Tier(stat_name, [row[i]])
+                tier_value = tier_classifier.get_tier_from_name(stat_name, row[i])
                 version_stats[stat_name] = tier_value
             character_version = FictionalCharacterVersion(version_name, version_stats)
             character_versions.append(character_version)
