@@ -1,11 +1,13 @@
 import json
 import requests
+import logging
 from bs4 import BeautifulSoup
+
+from character import FictionalCharacter, FictionalCharacterVersion
 from tier_parser import TierParser
 from typing import List
-import csv
 import itertools
-import os
+
 
 class CharacterParser:
     def __init__(self, config_file_path: str, character_name: str, tier_parser: TierParser):
@@ -28,7 +30,8 @@ class CharacterParser:
         response.raise_for_status()  # Raise an HTTPError for bad responses
         return response.text
 
-    def _flatten_children_text(self, parent_element):
+    @staticmethod
+    def _flatten_children_text(parent_element):
         # Initialize an empty list to store text from children
         text_list = []
 
@@ -41,7 +44,7 @@ class CharacterParser:
         flattened_text = ' '.join(text_list)
         return flattened_text
 
-    def parse_key(self, soup) -> List[str]:
+    def _parse_key(self, soup) -> List[str]:
         # Find the "Key:" element in the soup
         key_element = soup.find(text="Key:")
         if key_element:
@@ -62,20 +65,18 @@ class CharacterParser:
         else:
             return []
 
-    # Utility function for parsing and writing the output to a csv file.
-    def parse_and_write(self, output_file_path: str = None):
-        self.parse_character_stats()
-        self.write_to_csv(output_file_path)
-
-    def parse_character_stats(self):
+    def parse_character(self) -> FictionalCharacter:
         try:
             page_content = self._get_web_page()
             soup = BeautifulSoup(page_content, 'html.parser')
 
             # We first begin by parsing the key. This tells us the names of the versions of the character the
             # webpage will be evaluating.
-            # character_versions : List[String]
-            self.character_versions = self.parse_key(soup)
+            # character_version_names : List[String]
+            character_version_names = self._parse_key(soup)
+
+            # We create a list of character versions that will be updated with relevant stats.
+            character_versions = [FictionalCharacterVersion(v_name) for v_name in character_version_names]
 
             # We want a dictionary that associates each stat name with a list of tiers. Each tier in the list
             # represents the tier score of a different version of the character for a given stat.
@@ -84,77 +85,59 @@ class CharacterParser:
 
             for stat_name in self.tier_parser.stat_names:
                 clean_stat_name = stat_name.strip().replace(" ", "_")
-                stat_anchor = soup.find('a', href=f"/wiki/{clean_stat_name}")
 
-                if stat_anchor:
+                # The beginning of the try block, where we try to find elements from the webpage
+                # that contains the relevant information regarding our character & its versions.
+                try:
+                    # We find the anchor element that references the stat name.
+                    stat_anchor = soup.find('a', href=f"/wiki/{clean_stat_name}")
+
+                    # We find the bold element that contains the anchor element
                     bold_element = stat_anchor.find_parent('b')
 
-                    if bold_element:
-                        # Find the parent paragraph element of the bold element
-                        parent_paragraph = bold_element.find_parent('p')
+                    # We find the parent paragraph element of the bold element
+                    parent_paragraph = bold_element.find_parent('p')
 
-                        if parent_paragraph:
-                            # Flatten the text from children of the paragraph
-                            flattened_stat_information = self._flatten_children_text(parent_paragraph)
+                    # Flatten the text from children of the paragraph
+                    flattened_stat_information = self._flatten_children_text(parent_paragraph)
 
-                            # Split the flattened text by the delimiter "|"
-                            character_version_stat_information_list = flattened_stat_information.split('|')
+                    # Split the flattened text by the delimiter "|"
+                    character_version_stat_information_list = flattened_stat_information.split('|')
 
-                            # Initialize an array to store tier values
-                            tier_values = []
+                    # Initialize an array to store tier values
+                    tier_values = []
 
-                            for character_version_stat_information in character_version_stat_information_list:
-                                # Parse the value of the key text using the TierParser object
-                                tier_value = self.tier_parser\
-                                    .find_tier_values_from_text(stat_name, character_version_stat_information)[0]
+                    for character_version_stat_information in character_version_stat_information_list:
+                        # Parse the value of the key text using the TierParser object
+                        tier_value = self.tier_parser \
+                            .find_tier_values_from_text(stat_name, character_version_stat_information)[0]
 
-                                if tier_value:
-                                    # Add the value to the tier_values dictionary
-                                    tier_values.append(tier_value)
+                        if tier_value:
+                            # Add the value to the tier_values dictionary
+                            tier_values.append(tier_value)
 
-                            # Now that we have tier values, we must check if each character version
-                            # has an associated tier value. If not, we elongate the tier_values array.
-                            # By elongation a transformation such as from [1,2,3] to [1,1,2,2,3,3] is meant.
-                            if len(tier_values) != len(self.character_versions):
-                                num_repeat = len(self.character_versions) // len(tier_values) + 1
+                    # Now that we have tier values, we must check if each character version
+                    # has an associated tier value. If not, we elongate the tier_values array.
+                    # By elongation a transformation such as from [1,2,3] to [1,1,2,2,3,3] is meant.
+                    if len(tier_values) != len(character_version_names):
+                        num_repeat = len(character_version_names) // len(tier_values) + 1
 
-                                elongated_tier_values \
-                                    = list(itertools.chain.from_iterable(itertools.repeat(tier_values, num_repeat)))
-                                tier_values = elongated_tier_values[:len(self.character_versions)]
+                        elongated_tier_values \
+                            = list(itertools.chain.from_iterable(itertools.repeat(tier_values, num_repeat)))
+                        tier_values = elongated_tier_values[:len(character_version_names)]
 
-                            stats_and_values[stat_name] = tier_values
+                    for i in range(len(tier_values)):
+                        character_versions[i].add_tier_value(stat_name, tier_values[i])
 
-            self.stats_and_values = stats_and_values
+                except AttributeError:
+                    # Handle AttributeError when an element is missing
+                    logging.warning(f"Information for the stat '{stat_name}' could not be parsed from the webpage.")
+                    stats_and_values[stat_name] = []
+
+            return FictionalCharacter(self.character_name, character_versions)
 
         except Exception as e:
-            # Handle any other exceptions here, log the error, and decide what to do
-            # You can raise a custom exception or return None
-            print("An error occurred:", str(e))
-            return None
-
-    def write_to_csv(self, output_file_path: str = None):
-        file_name = self.character_name.strip().replace(" ", "-")
-        if output_file_path is None:
-            output_file_path = f"out/{file_name}.csv"
-        directory = os.path.dirname(output_file_path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        # Prepare the data for writing to the CSV file
-        data = []
-
-        # Add the legend in the first row
-        legend = ["Character Version"] + list(self.tier_parser.stat_names)
-        data.append(legend)
-
-        # Loop through character versions and add data for each version
-        for i in range(len(self.character_versions)):
-            character_version = self.character_versions[i]
-            row = [character_version] + [self.stats_and_values[stat_name][i].synonyms[0]
-                                         for stat_name in self.tier_parser.stat_names]
-            data.append(row)
-
-        # Write the data to a CSV file
-        with open(output_file_path, 'w', newline='') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerows(data)
+            # If there was an error before parsing the stats of the characters begin, we just return
+            # an empty character object.
+            logging.error("An error occurred: ", str(e))
+            return FictionalCharacter(self.character_name)

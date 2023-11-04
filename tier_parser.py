@@ -6,6 +6,7 @@ class Tier:
     def __init__(self, stat_name: str, synonyms: List[str]):
         self.stat_name = stat_name
         self.synonyms = synonyms
+        self.default_tier_name = synonyms[0]
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Tier):
@@ -18,7 +19,7 @@ class Tier:
             return False
 
     def __str__(self) -> str:
-        return f"Tier(stat_name: {self.stat_name}, synonyms: {self.synonyms})"
+        return f"Tier(stat_name: {self.stat_name}, value: {self.default_tier_name})"
 
 
 class TierParser:
