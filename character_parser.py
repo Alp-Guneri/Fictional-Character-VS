@@ -10,13 +10,9 @@ import itertools
 
 
 class CharacterParser:
-    def __init__(self, config_file_path: str, character_name: str, tier_parser: TierParser):
+    def __init__(self, config_file_path: str, tier_parser: TierParser):
         self._load_config(config_file_path)
-        self.character_name = character_name
         self.tier_parser = tier_parser
-        self.url = self.config["characters"].get(character_name)
-        if not self.url:
-            raise ValueError(f"Character '{character_name}' not found in the configuration.")
 
     def _load_config(self, config_file_path: str):
         try:
@@ -25,8 +21,11 @@ class CharacterParser:
         except FileNotFoundError:
             raise FileNotFoundError(f"Config file not found: {config_file_path}")
 
-    def _get_web_page(self):
-        response = requests.get(self.url)
+    def _get_web_page(self, character_name: str):
+        url = self.config["characters"].get(character_name)
+        if not url:
+            raise ValueError(f"Character '{character_name}' not found in the configuration.")
+        response = requests.get(url)
         response.raise_for_status()  # Raise an HTTPError for bad responses
         return response.text
 
@@ -65,9 +64,9 @@ class CharacterParser:
         else:
             return []
 
-    def parse_character(self) -> FictionalCharacter:
+    def parse_character(self, character_name: str) -> FictionalCharacter:
         try:
-            page_content = self._get_web_page()
+            page_content = self._get_web_page(character_name)
             soup = BeautifulSoup(page_content, 'html.parser')
 
             # We first begin by parsing the key. This tells us the names of the versions of the character the
@@ -76,7 +75,8 @@ class CharacterParser:
             character_version_names = self._parse_key(soup)
 
             # We create a list of character versions that will be updated with relevant stats.
-            character_versions = [FictionalCharacterVersion(v_name) for v_name in character_version_names]
+            character_versions = [FictionalCharacterVersion.from_version_name(v_name) for
+                                  v_name in character_version_names]
 
             # We want a dictionary that associates each stat name with a list of tiers. Each tier in the list
             # represents the tier score of a different version of the character for a given stat.
@@ -134,10 +134,10 @@ class CharacterParser:
                     logging.warning(f"Information for the stat '{stat_name}' could not be parsed from the webpage.")
                     stats_and_values[stat_name] = []
 
-            return FictionalCharacter(self.character_name, character_versions)
+            return FictionalCharacter(character_name, character_versions)
 
         except Exception as e:
             # If there was an error before parsing the stats of the characters begin, we just return
             # an empty character object.
             logging.error("An error occurred: ", str(e))
-            return FictionalCharacter(self.character_name)
+            return FictionalCharacter.from_character_name(character_name)

@@ -1,5 +1,6 @@
 from character_parser import CharacterParser
 from tier_parser import TierParser
+from character_io import write_to_csv
 
 if __name__ == "__main__":
     character_config_file_path = "character-config.json"
@@ -8,5 +9,7 @@ if __name__ == "__main__":
     character_name = "Son Goku"
 
     t_parser = TierParser(tier_config_file_path)
-    c_parser = CharacterParser(character_config_file_path, character_name, t_parser)
-    c_parser.parse_and_write()
+    c_parser = CharacterParser(character_config_file_path, t_parser)
+
+    goku = c_parser.parse_character(character_name)
+    write_to_csv(goku, "out/goku.csv")
