@@ -1,14 +1,15 @@
 import csv
 import os
 
-from character import FictionalCharacter, FictionalCharacterVersion
-from tier import Tier, TierClassifier
+from . import DEFAULT_OUTPUT_DIR
+from src.character import FictionalCharacter, FictionalCharacterVersion
+from src.tier import TierClassifier
 
 
 def write_to_csv(character: FictionalCharacter, output_file_path: str = None):
     file_name = character.character_name.strip().replace(" ", "-")
     if output_file_path is None:
-        output_file_path = f"out/{file_name}.csv"
+        output_file_path = f"{DEFAULT_OUTPUT_DIR}/{file_name}.csv"
     directory = os.path.dirname(output_file_path)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -39,7 +40,7 @@ def write_to_csv(character: FictionalCharacter, output_file_path: str = None):
 def read_from_csv(character_name: str, tier_classifier: TierClassifier, input_file_path: str = None):
     default_file_name = character_name.strip().replace(" ", "-")
     if input_file_path is None:
-        input_file_path = f"out/{default_file_name}.csv"
+        input_file_path = f"{DEFAULT_OUTPUT_DIR}/{default_file_name}.csv"
 
     with open(input_file_path, mode='r') as file:
         reader = csv.reader(file)

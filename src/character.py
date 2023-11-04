@@ -1,5 +1,5 @@
 from typing import Dict, List
-from tier import Tier
+from src.tier import Tier
 
 
 class FictionalCharacterVersion:

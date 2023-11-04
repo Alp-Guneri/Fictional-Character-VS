@@ -1,6 +1,7 @@
 import json
 import copy
 
+from . import DEFAULT_TIER_CONFIG_PATH
 from typing import List
 
 
@@ -30,7 +31,9 @@ class Tier:
 
 class TierClassifier:
 
-    def __init__(self, config_file_path: str):
+    def __init__(self, config_file_path: str = None):
+        if config_file_path is None:
+            config_file_path = DEFAULT_TIER_CONFIG_PATH
         # self.config: Dict[String, Any]
         self.config = None
         # self.stat_names: [str]
@@ -40,12 +43,12 @@ class TierClassifier:
 
         self._load_config(config_file_path)
 
-    def _load_config(self, config_file_path):
+    def _load_config(self, config_file_path: str):
         try:
             with open(config_file_path, 'r') as config_file:
                 self.config = json.load(config_file)
         except FileNotFoundError:
-            raise Exception(f"Config file not found: {config_file}")
+            raise Exception(f"Config file not found: {config_file_path}")
 
         # stat_names : List[str]
         self.stat_names = self.config.get("statNames", [])
