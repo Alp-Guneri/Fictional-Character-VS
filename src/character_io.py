@@ -54,7 +54,7 @@ def read_from_csv(character_name: str, tier_classifier: TierClassifier, input_fi
                 stat_name = legend[i]
                 tier_value = tier_classifier.get_tier_from_name(stat_name, row[i])
                 version_stats[stat_name] = tier_value
-            character_version = FictionalCharacterVersion(version_name, version_stats)
+            character_version = FictionalCharacterVersion(character_name, version_name, version_stats)
             character_versions.append(character_version)
 
     return FictionalCharacter(character_name, character_versions)

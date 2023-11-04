@@ -78,7 +78,7 @@ class CharacterParser:
             character_version_names = self._parse_key(soup)
 
             # We create a list of character versions that will be updated with relevant stats.
-            character_versions = [FictionalCharacterVersion.from_version_name(v_name) for
+            character_versions = [FictionalCharacterVersion.from_character_and_version_name(character_name, v_name) for
                                   v_name in character_version_names]
 
             # We want a dictionary that associates each stat name with a list of tiers. Each tier in the list
