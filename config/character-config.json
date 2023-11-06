@@ -1,45 +1,168 @@
 {
-    "characters": {
-        "Son Goku": "https://vsbattles.fandom.com/wiki/Son_Goku_(DBS_Anime)",
-        "Vegeta (DBS Manga)": "https://vsbattles.fandom.com/wiki/Vegeta_(DBS_Manga)",
-        "Jiren (DBS Manga)": "https://vsbattles.fandom.com/wiki/Jiren_(DBS_Manga)",
-        "Frieza (DBS Manga)": "https://vsbattles.fandom.com/wiki/Frieza_(DBS_Manga)",
-        "Satoru Gojo": "https://vsbattles.fandom.com/wiki/Satoru_Gojo",
-        "Yuji Itadori": "https://vsbattles.fandom.com/wiki/Yuji_Itadori",
-        "Megumi Fushiguro": "https://vsbattles.fandom.com/wiki/Megumi_Fushiguro",
-        "Toji Fushiguro": "https://vsbattles.fandom.com/wiki/Toji_Fushiguro",
-        "Hanami": "https://vsbattles.fandom.com/wiki/Hanami",
-        "Ryomen Sukuna": "https://vsbattles.fandom.com/wiki/Ryomen_Sukuna",
-        "Saitama": "https://vsbattles.fandom.com/wiki/Saitama",
-        "Garou": "https://vsbattles.fandom.com/wiki/Garou",
-        "Madara Uchiha": "https://vsbattles.fandom.com/wiki/Madara_Uchiha",
-        "Naruto": "https://vsbattles.fandom.com/wiki/Naruto_Uzumaki_(Part_II:_War_Arc)",
-        "Sasuke": "https://vsbattles.fandom.com/wiki/Sasuke_Uchiha_(Part_II)",
-        "Itachi": "https://vsbattles.fandom.com/wiki/Itachi_Uchiha",
-        "Pain": "https://vsbattles.fandom.com/wiki/Nagato_(Pain)",
-        "Dante": "https://vsbattles.fandom.com/wiki/Dante_(Devil_May_Cry)",
-        "Monkey D. Luffy (Post-Timeskip)": "https://vsbattles.fandom.com/wiki/Monkey_D._Luffy_(Post-Timeskip)",
-        "Shanks": "https://vsbattles.fandom.com/wiki/Shanks",
-        "Roronoa Zoro (Post-Timeskip)\n": "https://vsbattles.fandom.com/wiki/Roronoa_Zoro_(Post-Timeskip)",
-        "Gon": "https://vsbattles.fandom.com/wiki/Gon_Freecss",
-        "Killua": "https://vsbattles.fandom.com/wiki/Killua_Zoldyck",
-        "Guts": "https://vsbattles.fandom.com/wiki/Guts",
-        "Griffith": "https://vsbattles.fandom.com/wiki/Griffith",
-        "Lucifer Morningstar (DC Comics)": "https://vsbattles.fandom.com/wiki/Lucifer_Morningstar_(DC_Comics)",
-        "Superman (Rebirth)": "https://vsbattles.fandom.com/wiki/Superman_(Rebirth)",
-        "Gurren Lagann": "https://vsbattles.fandom.com/wiki/Gurren_Lagann",
-        "Baki Hanma": "https://vsbattles.fandom.com/wiki/Baki_Hanma",
-        "Yujiro Hanma": "https://vsbattles.fandom.com/wiki/Yujiro_Hanma",
-        "Biscuit Oliva": "https://vsbattles.fandom.com/wiki/Biscuit_Oliva",
-        "Jotaro Kujo": "https://vsbattles.fandom.com/wiki/Jotaro_Kujo",
-        "Dio Brando": "https://vsbattles.fandom.com/wiki/Dio_Brando",
-        "Yoshikage Kira": "https://vsbattles.fandom.com/wiki/Yoshikage_Kira",
-        "Johnny Joestar": "https://vsbattles.fandom.com/wiki/Johnny_Joestar",
-        "Tooru (JoJo's Bizarre Adventure)": "https://vsbattles.fandom.com/wiki/Tooru_(JoJo's_Bizarre_Adventure)",
-        "Enrico Pucci": "https://vsbattles.fandom.com/wiki/Enrico_Pucci",
-        "Jean Pierre Polnareff": "https://vsbattles.fandom.com/wiki/Jean_Pierre_Polnareff",
-        "Giorno Giovanna": "https://vsbattles.fandom.com/wiki/Giorno_Giovanna",
-        "Diavolo": "https://vsbattles.fandom.com/wiki/Diavolo",
-        "SCP-682": "https://vsbattles.fandom.com/wiki/SCP-682"
-    }
+    "characters": [
+        {
+            "name": "Son Goku",
+            "url": "https://vsbattles.fandom.com/wiki/Son_Goku_(DBS_Anime)"
+        },
+        {
+            "name": "Vegeta (DBS Manga)",
+            "url": "https://vsbattles.fandom.com/wiki/Vegeta_(DBS_Manga)"
+        },
+        {
+            "name": "Jiren (DBS Manga)",
+            "url": "https://vsbattles.fandom.com/wiki/Jiren_(DBS_Manga)"
+        },
+        {
+            "name": "Frieza (DBS Manga)",
+            "url": "https://vsbattles.fandom.com/wiki/Frieza_(DBS_Manga)"
+        },
+        {
+            "name": "Satoru Gojo",
+            "url": "https://vsbattles.fandom.com/wiki/Satoru_Gojo"
+        },
+        {
+            "name": "Yuji Itadori",
+            "url": "https://vsbattles.fandom.com/wiki/Yuji_Itadori"
+        },
+        {
+            "name": "Megumi Fushiguro",
+            "url": "https://vsbattles.fandom.com/wiki/Megumi_Fushiguro"
+        },
+        {
+            "name": "Toji Fushiguro",
+            "url": "https://vsbattles.fandom.com/wiki/Toji_Fushiguro"
+        },
+        {
+            "name": "Hanami",
+            "url": "https://vsbattles.fandom.com/wiki/Hanami"
+        },
+        {
+            "name": "Ryomen Sukuna",
+            "url": "https://vsbattles.fandom.com/wiki/Ryomen_Sukuna"
+        },
+        {
+            "name": "Saitama",
+            "url": "https://vsbattles.fandom.com/wiki/Saitama"
+        },
+        {
+            "name": "Garou",
+            "url": "https://vsbattles.fandom.com/wiki/Garou"
+        },
+        {
+            "name": "Madara Uchiha",
+            "url": "https://vsbattles.fandom.com/wiki/Madara_Uchiha"
+        },
+        {
+            "name": "Naruto",
+            "url": "https://vsbattles.fandom.com/wiki/Naruto_Uzumaki_(Part_II:_War_Arc)"
+        },
+        {
+            "name": "Sasuke",
+            "url": "https://vsbattles.fandom.com/wiki/Sasuke_Uchiha_(Part_II)"
+        },
+        {
+            "name": "Itachi",
+            "url": "https://vsbattles.fandom.com/wiki/Itachi_Uchiha"
+        },
+        {
+            "name": "Pain",
+            "url": "https://vsbattles.fandom.com/wiki/Nagato_(Pain)"
+        },
+        {
+            "name": "Dante",
+            "url": "https://vsbattles.fandom.com/wiki/Dante_(Devil_May_Cry)"
+        },
+        {
+            "name": "Monkey D. Luffy (Post-Timeskip)",
+            "url": "https://vsbattles.fandom.com/wiki/Monkey_D._Luffy_(Post-Timeskip)"
+        },
+        {
+            "name": "Shanks",
+            "url": "https://vsbattles.fandom.com/wiki/Shanks"
+        },
+        {
+            "name": "Roronoa Zoro (Post-Timeskip)",
+            "url": "https://vsbattles.fandom.com/wiki/Roronoa_Zoro_(Post-Timeskip)"
+        },
+        {
+            "name": "Gon",
+            "url": "https://vsbattles.fandom.com/wiki/Gon_Freecss"
+        },
+        {
+            "name": "Killua",
+            "url": "https://vsbattles.fandom.com/wiki/Killua_Zoldyck"
+        },
+        {
+            "name": "Guts",
+            "url": "https://vsbattles.fandom.com/wiki/Guts"
+        },
+        {
+            "name": "Griffith",
+            "url": "https://vsbattles.fandom.com/wiki/Griffith"
+        },
+        {
+            "name": "Lucifer Morningstar (DC Comics)",
+            "url": "https://vsbattles.fandom.com/wiki/Lucifer_Morningstar_(DC_Comics)"
+        },
+        {
+            "name": "Superman (Rebirth)",
+            "url": "https://vsbattles.fandom.com/wiki/Superman_(Rebirth)"
+        },
+        {
+            "name": "Gurren Lagann",
+            "url": "https://vsbattles.fandom.com/wiki/Gurren_Lagann"
+        },
+        {
+            "name": "Baki Hanma",
+            "url": "https://vsbattles.fandom.com/wiki/Baki_Hanma"
+        },
+        {
+            "name": "Yujiro Hanma",
+            "url": "https://vsbattles.fandom.com/wiki/Yujiro_Hanma"
+        },
+        {
+            "name": "Biscuit Oliva",
+            "url": "https://vsbattles.fandom.com/wiki/Biscuit_Oliva"
+        },
+        {
+            "name": "Jotaro Kujo",
+            "url": "https://vsbattles.fandom.com/wiki/Jotaro_Kujo"
+        },
+        {
+            "name": "Dio Brando",
+            "url": "https://vsbattles.fandom.com/wiki/Dio_Brando"
+        },
+        {
+            "name": "Yoshikage Kira",
+            "url": "https://vsbattles.fandom.com/wiki/Yoshikage_Kira"
+        },
+        {
+            "name": "Johnny Joestar",
+            "url": "https://vsbattles.fandom.com/wiki/Johnny_Joestar"
+        },
+        {
+            "name": "Tooru (JoJo's Bizarre Adventure)",
+            "url": "https://vsbattles.fandom.com/wiki/Tooru_(JoJo's_Bizarre_Adventure)"
+        },
+        {
+            "name": "Enrico Pucci",
+            "url": "https://vsbattles.fandom.com/wiki/Enrico_Pucci"
+        },
+        {
+            "name": "Jean Pierre Polnareff",
+            "url": "https://vsbattles.fandom.com/wiki/Jean_Pierre_Polnareff"
+        },
+        {
+            "name": "Giorno Giovanna",
+            "url": "https://vsbattles.fandom.com/wiki/Giorno_Giovanna"
+        },
+        {
+            "name": "Diavolo",
+            "url": "https://vsbattles.fandom.com/wiki/Diavolo"
+        },
+        {
+            "name": "SCP-682",
+            "url": "https://vsbattles.fandom.com/wiki/SCP-682"
+        }
+    ]
 }
