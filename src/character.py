@@ -35,6 +35,9 @@ class FictionalCharacter:
     def from_character_name(cls, character_name: str):
         return cls(character_name, [])
 
+    def get_character_versions_by_name(self, v_name: str) -> List[FictionalCharacterVersion]:
+        return list(filter(lambda v: v_name in v.version_name, self.character_versions))
+
     def add_character_version(self, version: FictionalCharacterVersion):
         self.character_versions.append(version)
 

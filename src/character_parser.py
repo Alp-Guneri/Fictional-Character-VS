@@ -9,6 +9,21 @@ from src.tier_parser import TierParser
 from typing import List
 from . import DEFAULT_CHARACTER_CONFIG_PATH
 
+class CharacterConfig:
+    def __init__(self, character_name: str, url: str):
+        self.character_name = character_name
+        self.url = url
+
+    def __str__(self):
+        return f"Character '{self.character_name}' is configured to the following URL: '{self.url}')"
+
+    def __eq__(self, other):
+        if isinstance(other, CharacterConfig):
+            return (
+                self.character_name == other.character_name and
+                self.url == other.url
+            )
+        return False
 
 class CharacterParser:
     def __init__(self, tier_parser: TierParser, config_file_path: str = None):
@@ -20,12 +35,19 @@ class CharacterParser:
     def _load_config(self, config_file_path: str):
         try:
             with open(config_file_path, 'r') as config_file:
-                self.config = json.load(config_file)
+                character_configs = []
+                for character_obj in json.load(config_file)["characters"]:
+                    character_configs.append(CharacterConfig(character_obj["name"], character_obj["url"]))
+                self.character_configs = character_configs
         except FileNotFoundError:
             raise FileNotFoundError(f"Config file not found: {config_file_path}")
 
     def _get_web_page(self, character_name: str):
-        url = self.config["characters"].get(character_name)
+        url = None
+        for character in self.character_configs:
+            if character.character_name == character_name:
+                url = character.url
+                break
         if not url:
             raise ValueError(f"Character '{character_name}' not found in the configuration.")
         response = requests.get(url)
