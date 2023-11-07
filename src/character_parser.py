@@ -1,4 +1,3 @@
-import json
 import requests
 import logging
 import itertools
@@ -7,7 +6,7 @@ from bs4 import BeautifulSoup
 from src.character import FictionalCharacter, FictionalCharacterVersion
 from src.tier_parser import TierParser
 from typing import List
-from . import DEFAULT_CHARACTER_CONFIG_PATH
+
 
 class CharacterConfig:
     def __init__(self, character_name: str, url: str):
@@ -20,10 +19,11 @@ class CharacterConfig:
     def __eq__(self, other):
         if isinstance(other, CharacterConfig):
             return (
-                self.character_name == other.character_name and
-                self.url == other.url
+                    self.character_name == other.character_name and
+                    self.url == other.url
             )
         return False
+
 
 class CharacterParser:
     def __init__(self, tier_parser: TierParser, config_file_json):

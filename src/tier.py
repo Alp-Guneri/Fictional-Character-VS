@@ -1,7 +1,5 @@
-import json
 import copy
 
-from . import DEFAULT_TIER_CONFIG_PATH
 from typing import List
 
 
@@ -84,4 +82,6 @@ class TierClassifier:
         return self.stat_names
 
     def get_all_tiers_of_stat(self, stat_name: str):
+        if stat_name not in self.stat_names:
+            return []
         return self.stat_name_to_all_tiers[stat_name]
