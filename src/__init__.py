@@ -17,3 +17,6 @@ DEFAULT_OUTPUT_DIR = os.path.join(PROJECT_DIR, 'out')
 
 DEFAULT_CHARACTER_CONFIG_PATH = os.path.join(CONFIG_DIR, 'character-config.json')
 DEFAULT_TIER_CONFIG_PATH = os.path.join(CONFIG_DIR, 'tier-config.json')
+
+DEFAULT_CHARACTER_CONFIG_SCHEMA_PATH = os.path.join(CONFIG_DIR, 'character-config-schema.json')
+DEFAULT_TIER_CONFIG_SCHEMA_PATH = os.path.join(CONFIG_DIR, 'tier-config-schema.json')

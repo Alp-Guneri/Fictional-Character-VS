@@ -31,25 +31,17 @@ class Tier:
 
 class TierClassifier:
 
-    def __init__(self, config_file_path: str = None):
-        if config_file_path is None:
-            config_file_path = DEFAULT_TIER_CONFIG_PATH
+    def __init__(self, config_file_json):
         # self.config: Dict[String, Any]
-        self.config = None
+        self.config = config_file_json
         # self.stat_names: [str]
         self.stat_names = []
         # self.stat_name_to_all_tiers: Dict[String, List[Tier]]
         self.stat_name_to_all_tiers = {}
 
-        self._load_config(config_file_path)
+        self._read_config()
 
-    def _load_config(self, config_file_path: str):
-        try:
-            with open(config_file_path, 'r') as config_file:
-                self.config = json.load(config_file)
-        except FileNotFoundError:
-            raise Exception(f"Config file not found: {config_file_path}")
-
+    def _read_config(self):
         # stat_names : List[str]
         self.stat_names = self.config.get("statNames", [])
 

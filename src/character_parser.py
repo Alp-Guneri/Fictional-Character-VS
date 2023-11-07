@@ -26,21 +26,16 @@ class CharacterConfig:
         return False
 
 class CharacterParser:
-    def __init__(self, tier_parser: TierParser, config_file_path: str = None):
-        if config_file_path is None:
-            config_file_path = DEFAULT_CHARACTER_CONFIG_PATH
-        self._load_config(config_file_path)
+    def __init__(self, tier_parser: TierParser, config_file_json):
+        self.config_json = config_file_json
+        self._read_config()
         self.tier_parser = tier_parser
 
-    def _load_config(self, config_file_path: str):
-        try:
-            with open(config_file_path, 'r') as config_file:
-                character_configs = []
-                for character_obj in json.load(config_file)["characters"]:
-                    character_configs.append(CharacterConfig(character_obj["name"], character_obj["url"]))
-                self.character_configs = character_configs
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Config file not found: {config_file_path}")
+    def _read_config(self):
+        character_configs = []
+        for character_obj in self.config_json["characters"]:
+            character_configs.append(CharacterConfig(character_obj["name"], character_obj["url"]))
+        self.character_configs = character_configs
 
     def _get_web_page(self, character_name: str):
         url = None
