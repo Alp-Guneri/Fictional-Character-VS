@@ -4,7 +4,8 @@ import re
 
 from jsonschema import ValidationError
 
-from src.character_parser import CharacterParser
+from src.character_parser import CharacterParser, CharacterConfig
+from src.search import CharacterSearcher
 from src.tier import TierClassifier
 from src.tier_parser import TierParser
 from src.character_io import write_to_csv, read_from_csv
@@ -25,7 +26,6 @@ def print_box(message: str, width_margin: int, height_margin: int):
 
 
 def prompt_tier_config() -> (TierClassifier, TierParser):
-    logger = logging.getLogger()
     tier_config_fpath = input("Please provide the path to tier configuration file (Press enter to use default): ")
     if tier_config_fpath.strip() == "":
         tier_config_fpath = DEFAULT_TIER_CONFIG_PATH
@@ -45,7 +45,7 @@ def prompt_tier_config() -> (TierClassifier, TierParser):
         prompt_tier_config()
 
 
-def prompt_char_config(tier_parser: TierParser) -> CharacterParser:
+def prompt_char_config(tier_parser: TierParser) -> (CharacterParser, str):
     char_config_fpath = input("Please provide the path to character configuration file (Press enter to use default): ")
     if char_config_fpath.strip() == "":
         char_config_fpath = DEFAULT_CHARACTER_CONFIG_PATH
@@ -55,7 +55,7 @@ def prompt_char_config(tier_parser: TierParser) -> CharacterParser:
             validate_character_schema(char_config_json)
             res = CharacterParser(tier_parser, char_config_json)
             print("Character configuration successful!\n")
-            return res
+            return res, char_config_fpath
     except FileNotFoundError as file_error:
         logging.error(f"File not found: {str(file_error)}.")
         prompt_char_config(tier_parser)
@@ -96,7 +96,7 @@ def prompt_menu_selection() -> int:
 class Main:
     def __init__(self):
         self.tier_classifier, self.tier_parser = prompt_tier_config()
-        self.character_parser = prompt_char_config(self.tier_parser)
+        self.character_parser, self.char_config_fpath = prompt_char_config(self.tier_parser)
         # self.configured_characters: List[CharacterConfig]
         self.configured_characters = self.character_parser.character_configs
         # self.parsed_characters: List[FictionalCharacter]
@@ -191,8 +191,78 @@ class Main:
                                     print(f"Number input out of bounds: {num_or_range}")
                     for character in chosen_characters:
                         write_to_csv(character)
-                except IOError as e:
+                except IOError:
                     print("Error while writing characters to the file.")
+            case 9:
+                fpath = input("Please provide the path to a csv file or a directory containing csv files: ")
+                if os.path.isfile(fpath):
+                    parsed_char = read_from_csv(fpath, self.tier_classifier)
+                    self.parsed_characters.append(parsed_char)
+                    print(f"Character \"{parsed_char.character_name}\" was read from csv successfully!")
+                elif os.path.isdir(fpath):
+                    parsed_chars = []
+                    for csv_file in os.listdir(fpath):
+                        if os.path.isfile(csv_file) and re.search("^([a-z]|[A-Z]|[0-9])+\.csv$", csv_file):
+                            parsed_chars.append(read_from_csv(csv_file, self.tier_classifier))
+                    self.parsed_characters.extend(parsed_chars)
+                else:
+                    print("The given path is invalid!")
+            case 10:
+                character_name1 = input("Please enter the first character's name: ")
+                parsed_char1 = self.find_parsed_character(character_name1)
+                if not parsed_char1:
+                    print("Character not found!")
+                else:
+                    print(parsed_char1)
+                    v_name1 = input("\nPlease enter a version name: ")
+                    if v_name1 not in [version.version_name for version in parsed_char1.character_versions]:
+                        print("Version not found!")
+                    else:
+                        version_1 = next(filter(lambda v: v.version_name == v_name1, parsed_char1.character_versions))
+                        character_name2 = input("Please enter the second character's name: ")
+                        parsed_char2 = self.find_parsed_character(character_name2)
+                        if not parsed_char2:
+                            print("Character not found!")
+                        else:
+                            print(parsed_char2)
+                            v_name2 = input("\nPlease enter a version name: ")
+                            if v_name1 not in [version.version_name for version in parsed_char2.character_versions]:
+                                print("Version not found!")
+                            else:
+                                version_2 = next(
+                                    filter(lambda v: v.version_name == v_name2, parsed_char2.character_versions))
+                                print(versus_battle(version_1, version_2))
+            case 11:
+                char_name = input("Please enter the name of character: ")
+                searcher = CharacterSearcher(char_name)
+                searcher.search_character()
+                character_found = False
+                while not character_found:
+                    print("(C)hoose character")
+                    print("(P)revious page")
+                    print("(N)ext page")
+                    print("(G)o to page by number")
+                    user_input = input("Please make a choice: ")
+                    match user_input[0]:
+                        case 'C':
+                            char_num = int(input("Please enter the character's number: "))
+                            if 0 < char_num <= len(searcher.results):
+                                search_result = searcher.results[char_num - 1]
+                                self.configured_characters.append(
+                                    CharacterConfig(search_result.character_name, search_result.webpage_url))
+                                character_found = True
+                        case 'P':
+                            searcher.get_prev_page()
+                        case 'N':
+                            searcher.get_next_page()
+                        case 'G':
+                            page_num = int(input("Please enter the page number you would like to go to: "))
+                            searcher.get_page_by_num(page_num)
+            case 12:
+                with open(self.char_config_fpath, 'w') as outfile:
+                    json.dump(self.configured_characters, outfile)
+            case 13:
+                exit(0)
             case _:
                 print("Not implemented!")
         self.main()
@@ -200,27 +270,3 @@ class Main:
 
 if __name__ == "__main__":
     Main()
-
-    # first_character_name = "Son Goku"
-    # second_character_name = "Saitama"
-    #
-    # t_classifier = TierClassifier()
-    #
-    # goku = read_from_csv(first_character_name, t_classifier)
-    # saitama = read_from_csv(second_character_name, t_classifier)
-    #
-    # goku_ultra_instinct = next(element for element in goku.character_versions
-    #                            if "Perfected Ultra Instinct" in element.version_name)
-    #
-    # saitama_parallel_timeline = next(element for element in saitama.character_versions
-    #                                  if "Parallel Timeline" in element.version_name)
-    #
-    # print(versus_battle(goku_ultra_instinct, saitama_parallel_timeline))
-
-    # character_name = "Saitama"
-    # t_classifier = TierClassifier()
-    # t_parser = TierParser(t_classifier)
-    # c_parser = CharacterParser(t_parser)
-    #
-    # saitama = c_parser.parse_character(character_name)
-    # write_to_csv(saitama)

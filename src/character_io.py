@@ -18,7 +18,7 @@ def write_to_csv(character: FictionalCharacter, output_file_path: str = None):
     stat_names = list(character.character_versions[0].stat_tier_map.keys())
 
     # Prepare the data for writing to the CSV file
-    data = []
+    data = [character.character_name]
 
     # Add the legend in the first row
     legend = ["Character Version"] + stat_names
@@ -37,13 +37,10 @@ def write_to_csv(character: FictionalCharacter, output_file_path: str = None):
         writer.writerows(data)
 
 
-def read_from_csv(character_name: str, tier_classifier: TierClassifier, input_file_path: str = None):
-    default_file_name = character_name.strip().replace(" ", "-")
-    if input_file_path is None:
-        input_file_path = f"{DEFAULT_OUTPUT_DIR}/{default_file_name}.csv"
-
+def read_from_csv(input_file_path: str, tier_classifier: TierClassifier):
     with open(input_file_path, mode='r') as file:
         reader = csv.reader(file)
+        character_name = next(reader)[0]
         legend = next(reader)
 
         character_versions = []

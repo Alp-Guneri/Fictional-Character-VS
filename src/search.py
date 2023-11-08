@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 
 class CharacterSearchResult:
-    def __init__(self, character_name: str, webpage_url: str, description: str, result_num: int) -> None:
+    def __init__(self, character_name: str, webpage_url: str, description: str, result_num: int):
         self.character_name = character_name
         self.webpage_url = webpage_url
         self.description = description
